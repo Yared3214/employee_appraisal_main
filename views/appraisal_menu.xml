@@ -1,0 +1,16 @@
+<odoo>
+    <!-- <menuitem id="menu_hr_root" name="Human Resources" sequence="10" /> -->
+    <!-- <menuitem id="menu_hr_appraisal" name="Appraisals" parent="menu_hr_root" sequence="10" /> -->
+    <menuitem id="menu_hr_root" name="Appraisals" sequence="10" />
+
+
+    <record id="action_hr_appraisal" model="ir.actions.act_window">
+        <field name="name">Appraisals</field>
+        <field name="res_model">hr.appraisal</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="submenu_hr_appraisal" name="Appraisals"
+        parent="menu_hr_root"
+        action="action_hr_appraisal" />
+</odoo>

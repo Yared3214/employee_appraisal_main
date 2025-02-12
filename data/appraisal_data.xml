@@ -1,0 +1,8 @@
+<odoo>
+    <record id="appraisal_demo_1" model="hr.appraisal">
+        <field name="name">John Doe</field>
+        <field name="manager_id" ref="base.user_admin"/>
+        <field name="appraisal_date">2024-12-19</field>
+        <field name="template_id" ref="appraisal_template_default"/>
+    </record>
+</odoo>

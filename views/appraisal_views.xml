@@ -1,0 +1,175 @@
+<odoo>
+    <record id="view_form_hr_appraisal" model="ir.ui.view">
+        <field name="name">hr.appraisal.form</field>
+        <field name="model">hr.appraisal</field>
+
+
+        <field name="arch" type="xml">
+            <form string="Appraisal">
+                <header>
+                    <field name="state" widget="statusbar"
+                        statusbar_visible="draft,sent_to_manager,viewed_by_manager,sent_to_deputy,completed"
+                        group="employee_appraisal_main.group_human_resources"
+                        invisible="state_visibility != 'manager'"
+                    />
+                    <!-- Send to Manager Button -->
+                    <button string="Send to Manager"
+                        name="create_appraisal_activity_to_manager"
+                        type="object"
+                        class="oe_highlight"
+                        groups="employee_appraisal_main.group_human_resources"
+                        invisible="state != 'draft'" />
+
+                    <!-- Ensure the field 'employee_id.user_id' is included in the form view -->
+                    <field name="employee_user_id" invisible="1" />
+
+                    <!-- Send to Deputy Button -->
+                    <button string="Send to CEO"
+                        name="create_appraisal_activity_to_deputy"
+                        type="object"
+                        class="oe_highlight"
+                        invisible="send_to_role != 'deputy' or state != 'sent_to_manager' or employee_user_id == uid"
+                        groups="employee_appraisal_main.group_manager" />
+
+                    <!-- Send to Employee Buttton -->
+                    <button string="Send to Employee"
+                        name="create_appraisal_activity_to_employee"
+                        type="object"
+                        class="oe_highlight"
+                        invisible="send_to_role != 'employee' or state != 'sent_to_deputy'"
+                        groups="employee_appraisal_main.group_ceo" />
+                    <field name="send_to_role" invisible="1" />
+                    <field name="state_visibility" invisible="1" />
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="employee_id"
+                                groups="employee_appraisal_main.group_human_resources" />
+                            <field name="manager_id"
+                                groups="employee_appraisal_main.group_human_resources" />
+                            <field name="appraisal_date"
+                                groups="employee_appraisal_main.group_human_resources" />
+                            <field name="next_appraisal_date"
+                                groups="employee_appraisal_main.group_human_resources" />
+                            <field name="is_user_hr" invisible="1" />
+                        </group>
+                        <group>
+                            <field name="job_position"
+                                groups="employee_appraisal_main.group_human_resources" />
+                            <field name="department"
+                                groups="employee_appraisal_main.group_human_resources" />
+                        </group>
+                        <group>
+                            <field name="employee_id"
+                                groups="employee_appraisal_main.group_manager" readonly="True" />
+                            <field name="manager_id"
+                                groups="employee_appraisal_main.group_manager" readonly="True" />
+                            <field name="appraisal_date"
+                                groups="employee_appraisal_main.group_manager" readonly="True" />
+                            <field name="next_appraisal_date"
+                                groups="employee_appraisal_main.group_manager" readonly="True" />
+                            <field name="is_user_hr" invisible="1" />
+                        </group>
+                        <group>
+                            <field name="job_position"
+                                groups="employee_appraisal_main.group_manager" readonly="True" />
+                            <field name="department"
+                                groups="employee_appraisal_main.group_manager" readonly="True" />
+                        </group>
+                        <group>
+                            <field name="employee_id"
+                                groups="employee_appraisal_main.group_ceo" readonly="True" />
+                            <field name="manager_id"
+                                groups="employee_appraisal_main.group_ceo" readonly="True" />
+                            <field name="appraisal_date"
+                                groups="employee_appraisal_main.group_ceo" readonly="True" />
+                            <field name="next_appraisal_date"
+                                groups="employee_appraisal_main.group_ceo" readonly="True" />
+                            <field name="is_user_hr" invisible="1" />
+                        </group>
+                        <group>
+                            <field name="job_position"
+                                groups="employee_appraisal_main.group_ceo" readonly="True" />
+                            <field name="department"
+                                groups="employee_appraisal_main.group_ceo" readonly="True" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <field name="employee_user_id" invisible="1" />
+                        <page string="HR Appraisal" invisible="employee_user_id != uid">
+                            <field name="hr_main_measurement_ids" widget="one2many_list" nolabel="1">
+                                <tree string="Detail Measurements" editable="bottom" create="1"
+                                    edit="1">
+                                    <field name="main_name" string="Main KPI"
+                                    />
+                                    <field name="detail_name" string="Detail KPI"
+                                        required="1" />
+                                    <field name="weight" string="Weight" required="1"
+                                    />
+                                    <field name="point" string="Point" required="1"
+                                    />
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="HR Appraisal"
+                            groups="employee_appraisal_main.group_human_resources, employee_appraisal_main.group_ceo">
+                            <field name="hr_main_measurement_ids" widget="one2many_list" nolabel="1">
+                                <tree string="Detail Measurements" editable="bottom" create="1"
+                                    edit="1">
+                                    <field name="main_name" string="Main KPI"
+                                    />
+                                    <field name="detail_name" string="Detail KPI"
+                                        required="1" />
+                                    <field name="weight" string="Weight" required="1"
+                                    />
+                                    <field name="point" string="Point" required="1"
+                                    />
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Manager Appraisal" group="">
+                            <field name="manager_main_measurement_ids" widget="one2many_list"
+                                nolabel="1">
+                                <tree string="Detail Measurements" editable="bottom"
+                                    create="1"
+                                    edit="1">
+                                    <field name="main_name" string="Main KPI"
+                                    />
+                                    <field name="detail_name" string="Detail KPI"
+                                        required="1" />
+                                    <field name="weight" string="Weight" required="1"
+                                    />
+                                    <field name="point" string="Point" required="1"
+                                    />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_tree_hr_appraisal" model="ir.ui.view">
+        <field name="name">hr.appraisal.tree</field>
+        <field name="model">hr.appraisal</field>
+        <field name="arch" type="xml">
+            <tree string="Appraisal">
+                <field name="employee_id" />
+                <field name="manager_id" />
+                <field name="appraisal_date" />
+                <field name="next_appraisal_date" />
+                <field name="state" invisible="1" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_hr_appraisal_manager" model="ir.actions.act_window">
+        <field name="name">My Appraisals</field>
+        <field name="res_model">hr.appraisal</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state', '=', 'sent_to_manager')]</field>
+    </record>
+
+</odoo>
